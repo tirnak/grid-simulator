@@ -1,24 +1,43 @@
 package app.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import app.model.Point2D;
+import app.service.InfiniteBlackWhiteGrid;
+import app.service.Simulator;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import service.Simulator;
+
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 @RestController
-public class SimulateController
-{
+public class SimulateController {
 
-	@Autowired
-	private Simulator simulator;
+    /**
+     * Use bean factory wrapper to dinamically obtaion
+     * fresh simulator each time
+     */
+    @Inject
+    private ObjectProvider<Simulator> simulatorFactory;
 
-	@RequestMapping(path = "/simulate", method = RequestMethod.GET)
-	public Map String()
-	{
+    /**
+     * Serializer abstracted as a funcitonal interface,
+     * takes grid, actor's location, returns serialized value
+     */
+    @Inject
+    private BiFunction<InfiniteBlackWhiteGrid, Point2D, String> serializer;
 
-		return Map.of("status", "OK");
-	}
+    @RequestMapping(path = "/simulate", method = RequestMethod.PUT)
+    public Map simulate(@RequestParam Integer ticks) {
+
+        Simulator simulator = simulatorFactory.getObject();
+        simulator.run(ticks);
+        String result = simulator.serialize(serializer);
+
+        return Map.of("status", "OK", "result", result);
+    }
 }

@@ -1,17 +1,16 @@
-package service.impl;
+package app.service.impl;
 
-import model.Direction;
-import model.Point2D;
-import org.springframework.stereotype.Component;
-import service.Actor;
-import service.InfiniteBlackWhiteGrid;
+import app.model.Color;
+import app.model.Direction;
+import app.model.Point2D;
+import app.service.Actor;
+import app.service.InfiniteBlackWhiteGrid;
+
 import javax.inject.Inject;
-import java.awt.*;
 
-import static java.awt.Color.BLACK;
-import static java.awt.Color.WHITE;
+import static app.model.Color.BLACK;
+import static app.model.Color.WHITE;
 
-@Component
 public class ActorImpl implements Actor
 {
 	@Inject
@@ -23,18 +22,14 @@ public class ActorImpl implements Actor
 	@Inject
 	private Direction orientation;
 
-	@Override
-	public int getX()
-	{
-		return location.getX();
-	}
+    @Override
+    public Point2D getCurrentLocation() {
+        return location;
+    }
 
-	@Override
-	public int getY()
-	{
-		return location.getY();
-	}
-
+	/**
+	 * Main logic for traversing and mutating the grid
+	 */
 	@Override
 	public void act()
 	{
@@ -46,7 +41,7 @@ public class ActorImpl implements Actor
 		{
 			orientation = orientation.nextClockwise();
 		}
-		if (BLACK.equals(oldColor))
+		else if (BLACK.equals(oldColor))
 		{
 			orientation = orientation.nextCounterClockwise();
 		}
@@ -61,10 +56,13 @@ public class ActorImpl implements Actor
 		grid.flipColor(oldLocation);
 	}
 
+	/**
+	 * Returns immutable in order to avoid state mutation
+	 */
 	@Override
 	public InfiniteBlackWhiteGrid getGrid()
 	{
-		return grid;
+		return new ImmutableGridDecorator(grid);
 	}
 }
 
