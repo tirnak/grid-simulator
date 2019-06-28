@@ -5,10 +5,7 @@ import app.service.InfiniteBlackWhiteGrid;
 import app.service.Simulator;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -32,7 +29,7 @@ public class SimulateController {
     private BiFunction<InfiniteBlackWhiteGrid, Point2D, String> serializer;
 
     @RequestMapping(path = "/simulate", method = RequestMethod.PUT)
-    public Map simulate(@RequestParam Integer ticks) {
+    public Map simulate(@RequestBody Integer ticks) {
 
         Simulator simulator = simulatorFactory.getObject();
         simulator.run(ticks);
