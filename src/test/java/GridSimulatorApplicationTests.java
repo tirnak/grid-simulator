@@ -1,20 +1,22 @@
 import app.GridSimulatorApplication;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Random;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
+/**
+ * TODO Add tests for actual result, add unit tests, add Rest Assured specification for the endpoints
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = GridSimulatorApplication.class)
 public class GridSimulatorApplicationTests {
@@ -25,29 +27,23 @@ public class GridSimulatorApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Test
+	/**
+	 * TODO cleanup file with simulation results after getting endpoint
+	 */
+	@Test
     public void testSimulateOk() throws Exception {
+	    RestAssured.port = Integer.valueOf(port);
+
+	    Map params = Map.of("ticks", 100);
+	    String body = new ObjectMapper().writeValueAsString(params);
+
         given()
-                .param("ticks", 1)
+	            .contentType(ContentType.JSON)
+                .body(body)
                 .when()
                 .put("/simulate")
                 .then()
                 .statusCode(HttpStatus.OK.value());
-    }
+	}
 
-    @Test
-    public void testSimulate1() throws Exception {
-        String filename = given()
-                .param("ticks", 1)
-                .when()
-                .put("/simulate")
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                    .path("filename");
-
-        byte[] bytes = Files.readAllBytes(Paths.get(filename));
-
-        int x = 4 + new Random().nextInt();
-    }
 }
