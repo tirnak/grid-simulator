@@ -15,11 +15,10 @@ It will move based on the following rules:
 - If the machine is in a black square, turn 90° counter-clockwise and move forward 1 unit;
 - At every move flip the color of the base square.
 
-Implement an application that will receive HTTP PUT requests 
-with a number of steps the simulation should run, always starting from the same conditions;
+An application receives HTTP PUT requests with a number of steps the simulation should run, 
+always starting from the same conditions.
 
-The resulting grid is save to a file and 
-the path to the file is then returned to a user in HTTP response
+The resulting grid is saved to a file and the path to the file is then returned to a user in HTTP response.
 With a default configuration, newly created file is `/tmp/%random_uuid%.txt`
 
 ### Running from command line
