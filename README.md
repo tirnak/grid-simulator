@@ -1,13 +1,12 @@
 Spring boot application which has
-`/simulate` endpoint, that accepts:
-- PUT request 
-- with `ticks` parameter of `int`
+`PUT /simulate` endpoint, that accepts:
+- `ticks` parameter of `int`
 
-Also there is a `GET /health` endpoint to check that application is up 
+Also there is a `GET /health` endpoint to check that application is up.
 
 Then it does a simulation
 
-###Simulation logic
+### Simulation logic
 
 Consider an infinite grid of white and black squares. 
 The grid is initially all white and there is a machine in one cell facing right. 
@@ -23,7 +22,7 @@ The resulting grid is save to a file and
 the path to the file is then returned to a user in HTTP response
 With a default configuration, newly created file is `/tmp/%random_uuid%.txt`
 
-###Running from command line
+### Running from command line
 
 From root directory of the project:
 
@@ -32,7 +31,7 @@ From root directory of the project:
 
 Access via `http://localhost:8080/health`
 
-###Running from a container
+### Running from a container
 
 1. On a build agent, having javac for Java 11+: build jar artifact. 
 
